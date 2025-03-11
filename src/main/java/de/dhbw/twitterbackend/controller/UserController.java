@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.core.io.Resource;
@@ -181,18 +182,41 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable long id) {
-        userService.deleteUserById(id);
-        return ResponseEntity.ok("Benutzer mit ID " + id + " wurde gelöscht");
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Map<String, String>> deleteUserById(@PathVariable long id) {
+        try {
+            // Überprüfe, ob der Benutzer existiert
+            if (!userService.userExists(id)) {
+                Map<String, String> response = new HashMap<>();
+                response.put("status", "404");
+                response.put("message", "Benutzer mit ID " + id + " nicht gefunden.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            // Lösche den Benutzer
+            userService.deleteUserById(id);
+
+            // Erfolgsmeldung zurückgeben
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "200");
+            response.put("message", "Benutzer mit ID " + id + " wurde erfolgreich gelöscht.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // Fehlermeldung zurückgeben
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "500");
+            response.put("message", "Fehler beim Löschen des Benutzers: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
+    /* Testdaten alle löschen
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAll() {
         userService.deleteAll();
         return ResponseEntity.ok("Alle user gelöscht");
     }
 
-
+     */
 
     //Hilfsmethode
     private Long getAuthenticatedUserId() {

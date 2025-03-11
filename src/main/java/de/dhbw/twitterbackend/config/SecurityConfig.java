@@ -42,7 +42,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/uploads/**").permitAll()  // Erlaubt Zugriff auf /uploads mit Bildern
 
-                        // Login & Registrierung sind öffentlich
+                        // Login und Registrierung sind öffentlich
                         .requestMatchers("/api/user/**").authenticated() // Alle User-Änderungen benötigen Authentifizierung
                         .anyRequest().authenticated() // Alle anderen Endpunkte erfordern Auth
                 )

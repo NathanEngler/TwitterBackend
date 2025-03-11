@@ -99,11 +99,13 @@ public class UserService {
 
         }
     }
-
+    /*
     //Testdaten löschen
     public void deleteAll(){
         userRepository.deleteAll();
     }
+
+     */
 
     public void deleteUserById(long id) {
         if(userRepository.findById(id).isPresent()) {
@@ -113,6 +115,11 @@ public class UserService {
 
         }
     }
+    public boolean userExists(long id) {
+        return userRepository.existsById(id);
+    }
+
+
 
 
 }
