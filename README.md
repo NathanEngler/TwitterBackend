@@ -1,7 +1,7 @@
 Project Y - LogIn Component
 =======
 # Beschreibung
-Im Rahmen des Gruppenprojekts in "Verteilte Systeme" haben wir einen Microblogging-Service entwickelt, inspiriert von Twitter. Meine Komponente fokussiert sich auf die Porfilverwaltung (Email, Username, etc. ändern, Profilbild). Die technische Umsetzung erfolgte mit **Angular** als Framework und Spring Boot für das Backend.
+Im Rahmen des Gruppenprojekts in "Verteilte Systeme" haben wir einen Microblogging-Service entwickelt, inspiriert von Twitter. Meine Komponente fokussiert sich auf die Profilverwaltung (Email, Username, etc. ändern, Profilbild). Die technische Umsetzung erfolgte mit **Angular** als Framework und Spring Boot für das Backend.
 ## Funktionen
 Die Login-Komponente bietet folgende Features:
 Bei meiner Komponente handelt es sich um die Profilverwaltung, dass heißt Änderungen von den essentiellen Nutzerdaten wie Vorname, Nachname, Email, Username und Passwort sowie der Upload von einem Profilbild. Zudem ist auch eine Löschung des Accounts möglich. Um sinnvoll eine solche Komponente zu implementieren waren auch eine Registrierung und Login Komponente notwendig da jeder User natürlich nur seine eigenen Attribute ändern kann, seinen eigenen Account löschen, etc. Da Registrierung und Login nicht die eigentliche Hauptaufgabe waren sind sie nicht vollständig ausprogrammiert, zum Beispiel gibt es bei einer fehlerhaften Registrierung teilweise nur generische Fehlermeldungen.
