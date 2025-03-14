@@ -1,4 +1,4 @@
-Project Y - LogIn Component
+Project Y - Profilverwaltung
 =======
 # Beschreibung
 Im Rahmen des Gruppenprojekts in "Verteilte Systeme" haben wir einen Microblogging-Service entwickelt, inspiriert von Twitter. Meine Komponente fokussiert sich auf die Profilverwaltung. Die technische Umsetzung erfolgte mit **Angular** als Framework und **Spring Boot** für das Backend.
