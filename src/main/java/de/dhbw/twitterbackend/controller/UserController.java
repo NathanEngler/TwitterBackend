@@ -47,85 +47,51 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserProfile(id));
     }
 
-    @PutMapping("/{id}/newpassword")
-    public ResponseEntity<Map<String, String>> changePassword(
+    @PutMapping("/{id}/update")
+    public ResponseEntity<Map<String, String>> updateUserField(
             @PathVariable long id,
             @RequestBody Map<String, String> request
     ) {
         Long authenticatedUserId = getAuthenticatedUserId();
         if (!authenticatedUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You only can change your own Password!"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You only can change your own data!"));
         }
 
-        String oldPassword = request.get("oldPassword");
-        String newPassword = request.get("newPassword");
-        if (oldPassword == null || oldPassword.isEmpty() || newPassword == null || newPassword.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Old and new password are required"));
-        }
-        if (!userService.verifyPassword(id, oldPassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Old password is incorrect"));
+        String field = request.get("field");
+        String value = request.get("value");
+
+        if (field == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Field and value are required"));
         }
 
-        userService.changePassword(id, newPassword);
-        return ResponseEntity.ok(Map.of("message", "Password successfully changed!"));
-    }
-    @PutMapping("/{id}/newemail")
-    public ResponseEntity<Map<String, String>> changeEmail(@PathVariable long id, @RequestBody Map<String, String> request) {
-        Long authenticatedUserId = getAuthenticatedUserId();
-        if (!authenticatedUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You only can change your own Email!"));
+        switch (field) {
+            case "email":
+                userService.changeEmail(id, value);
+                break;
+            case "firstname":
+                userService.changeFirstname(id, value);
+                break;
+            case "lastname":
+                userService.changeLastname(id, value);
+                break;
+            case "username":
+                userService.changeUsername(id, value);
+                break;
+            case "password":
+                String oldPassword = request.get("oldPassword"); //
+                if (oldPassword == null || oldPassword.isEmpty()) {
+                    return ResponseEntity.badRequest().body(Map.of("message", "Old password is required"));
+                }
+                if (!userService.verifyPassword(id, oldPassword)) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Old password is incorrect"));
+                }
+                userService.changePassword(id, value);
+                break;
+            default:
+                return ResponseEntity.badRequest().body(Map.of("message", "Invalid field"));
         }
-        String email = request.get("email");
-        if (email == null || email.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Email is required"));
-        }
-        userService.changeEmail(id, email);
-        return ResponseEntity.ok(Map.of("message", "Email successfully changed!"));
-    }
-    @PutMapping("/{id}/newfirstname")
-    public ResponseEntity<Map<String, String>> changeFirstname(@PathVariable long id, @RequestBody Map<String, String> request) {
-        Long authenticatedUserId = getAuthenticatedUserId();
-        if (!authenticatedUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You only can change your own Firstname!"));
-        }
-        String firstname = request.get("firstname");
-        if (firstname == null || firstname.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Firstname is required"));
-        }
-        userService.changeFirstname(id, firstname);
-        return ResponseEntity.ok(Map.of("message", "Firstname successfully changed!"));
-    }
-    @PutMapping("/{id}/newlastname")
-    public ResponseEntity<Map<String, String>> changeLastname(
-            @PathVariable long id,
-            @RequestBody Map<String, String> request
-    ) {
-        Long authenticatedUserId = getAuthenticatedUserId();
-        if (!authenticatedUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You only can change your own Lastname!"));
-        }
-        String lastname = request.get("lastname");
-        if (lastname == null || lastname.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Lastname is required"));
-        }
-        userService.changeLastname(id, lastname);
-        return ResponseEntity.ok(Map.of("message", "Lastname successfully changed!"));
-    }
-    @PutMapping("/{id}/newusername")
-    public ResponseEntity<Map<String, String>> changeUsername(
-            @PathVariable long id,
-            @RequestBody Map<String, String> request
-    ) {
-        Long authenticatedUserId = getAuthenticatedUserId();
-        if (!authenticatedUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You only can change your own Username!"));
-        }
-        String username = request.get("username");
-        if (username == null || username.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Username is required"));
-        }
-        userService.changeUsername(id, username);
-        return ResponseEntity.ok(Map.of("message", "Username successfully changed!"));
+
+        return ResponseEntity.ok(Map.of("message", field + " successfully changed!"));
     }
 
     @PutMapping("/{id}/upload-profile-picture")
@@ -226,7 +192,5 @@ public class UserController {
         }
         return null;
     }
-
-
 
 }

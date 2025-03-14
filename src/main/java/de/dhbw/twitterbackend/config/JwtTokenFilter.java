@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
-
+// Überprüft Token auf Korrektheit
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -42,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             Long userId = jwtTokenProvider.getUserIdFromToken(token);
             //System.out.println("Authenticated User ID: " + userId); // debugging
 
-            UserDetails userDetails = new User(userId.toString(), "", List.of()); // Dummy UserDetails ohne Rollen
+            UserDetails userDetails = new User(userId.toString(), "", List.of());
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

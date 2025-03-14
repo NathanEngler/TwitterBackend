@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -41,55 +42,47 @@ public class UserService {
         response.put("email", user.getEmail());
         response.put("username", user.getUsername());
         response.put("profilePictureUrl", user.getProfilepictureUrl());
-        //response.put("password", user.getPassword());
+        //response.put("password", user.getPassword()); Passwort wird nur mit **** angezeigt
         return response;
     }
-    public void changePassword(long id, String password) {
-        if(userRepository.findById(id).isPresent()) {
-            userRepository.findById(id).get().setPassword(passwordEncoder.encode(password));
-            userRepository.save(userRepository.findById(id).get());
-        } else {
-            throw new UserNotFoundException("User not found with ID: " + id);
-        }
+    // Allgemeine Methode zum Aktualisieren eines Benutzerfelds
+    private void updateUserField(long id, Consumer<User> updateAction) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+        updateAction.accept(user);
+        userRepository.save(user);
     }
+
+    public void changePassword(long id, String newPassword) {
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long");
+        }
+        updateUserField(id, user -> user.setPassword(passwordEncoder.encode(newPassword)));
+    }
+
+    // Altes Passwort verifizieren
     public boolean verifyPassword(long userId, String oldPassword) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        // Vergleiche das eingegebene alte Passwort mit dem gespeicherten Passwort
         return passwordEncoder.matches(oldPassword, user.getPassword());
     }
+
     public void changeEmail(long id, String email) {
-        if(userRepository.findById(id).isPresent()) {
-            userRepository.findById(id).get().setEmail(email);
-            userRepository.save(userRepository.findById(id).get());
-        } else {
-            throw new UserNotFoundException("User not found with ID: " + id);
-        }
+        updateUserField(id, user -> user.setEmail(email));
     }
+
     public void changeFirstname(long id, String firstname) {
-        if(userRepository.findById(id).isPresent()) {
-            userRepository.findById(id).get().setFirstname(firstname);
-            userRepository.save(userRepository.findById(id).get());
-        } else {
-            throw new UserNotFoundException("User not found with ID: " + id);
-        }
+        updateUserField(id, user -> user.setFirstname(firstname));
     }
+
     public void changeLastname(long id, String lastname) {
-        if(userRepository.findById(id).isPresent()) {
-            userRepository.findById(id).get().setLastname(lastname);
-            userRepository.save(userRepository.findById(id).get());
-        } else {
-            throw new UserNotFoundException("User not found with ID: " + id);
-        }
+        updateUserField(id, user -> user.setLastname(lastname));
     }
+
     public void changeUsername(long id, String username) {
-        if(userRepository.findById(id).isPresent()) {
-            userRepository.findById(id).get().setUsername(username);
-            userRepository.save(userRepository.findById(id).get());
-        } else {
-            throw new UserNotFoundException("User not found with ID: " + id);
-        }
+        updateUserField(id, user -> user.setUsername(username));
     }
+
     public void changeProfilepicture(long id, String profilepictureUrl){
         if(userRepository.findById(id).isPresent()) {
             userRepository.findById(id).get().setProfilepictureUrl(profilepictureUrl);
@@ -99,6 +92,7 @@ public class UserService {
 
         }
     }
+
     /*
     //Testdaten löschen
     public void deleteAll(){
@@ -118,8 +112,4 @@ public class UserService {
     public boolean userExists(long id) {
         return userRepository.existsById(id);
     }
-
-
-
-
 }

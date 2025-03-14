@@ -30,7 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
 
-                .cors(cors -> cors.disable()) // Falls du CORS brauchst, kannst du es aktivieren
+                .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable()) // Kein CSRF-Schutz für REST APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/user/register").permitAll()
@@ -40,7 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
 
-                        .requestMatchers("/uploads/**").permitAll()  // Erlaubt Zugriff auf /uploads mit Bildern
+                        //.requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/uploads/**").authenticated()
 
                         // Login und Registrierung sind öffentlich
                         .requestMatchers("/api/user/**").authenticated() // Alle User-Änderungen benötigen Authentifizierung

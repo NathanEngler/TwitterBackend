@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Konfiguriere den Handler für statische Dateien im "uploads"-Verzeichnis
+        // Konfiguriere den Handler für statische Dateien im "uploads"-Verzeichnis --> Profilbild aktuell halten
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }

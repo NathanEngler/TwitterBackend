@@ -33,12 +33,12 @@ public class AuthController {
         }
 
         if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Falsche Zugangsdaten!"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Wrong credentials!"));
         }
 
         User user = userOptional.get();
         if (!new BCryptPasswordEncoder().matches(loginRequest.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Falsche Zugangsdaten!"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Wrong credentials!"));
         }
 
         //  Hier wird jetzt das Token mit dem User generiert

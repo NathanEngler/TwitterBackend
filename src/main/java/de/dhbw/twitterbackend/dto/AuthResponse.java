@@ -7,5 +7,6 @@ import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor
 public class AuthResponse {
+    //Prinzipiell nicht notwendig für nur ein Attribut, aber bessere Erweiterbarkeit
     private String token;
 }
